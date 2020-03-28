@@ -128,7 +128,7 @@ def create_subsystem(request):
         priority = request.POST['priority']
         pv = request.POST['point_value']
         # Third form group
-        if request.POST['parent_system'] is 'None':
+        if request.POST['parent_system'] is '':
             parent = None
         else:
             parent = Subsystem.objects.get(pk=request.POST['parent_system'])
