@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<head>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+    <!-- Blank favicon -->
+    <link
+        href="data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+        rel="icon" type="image/x-icon" />
+
+    <title>ASTRA SMT</title>
+</head>
+
+<div class="px-0 border border-primary container-fluid"
+    style="overflow-y: scroll; overflow-x: hidden; height: 100vh; background-color: #BFDBF7;">
+    {% include 'smt/navbar.html' %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="mt-4 mx-4 alert alert-danger alert-dismissible">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="px-4 py-4 row d-flex justify-content-center">
+        <div class="pb-4 col-lg-2 col-md-4" style="min-width: 280px;">
+            {% include 'smt/software_persons.html' %}
+        </div>
+        <div class="pb-4 col-lg-2 col-md-4" style="min-width: 280px;">
+            {% include 'smt/electrical_persons.html' %}
+        </div>
+        <div class="pb-4 col-lg-2 col-md-4" style="min-width: 280px;">
+            {% include 'smt/science_persons.html' %}
+        </div>
+        <div class="pb-4 col-lg-2 col-md-4" style="min-width: 280px;">
+            {% include 'smt/mechanical_persons.html' %}
+        </div>
+        <div class="pb-4 col-lg-4 col-md-4" style="min-width: 400px;">
+            {% include 'smt/info.html' %}
+        </div>
+    </div>
+    <div class="px-4 py-4 row d-flex justify-content-center">
+        <div class="col">
+            <hr>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            <h5><code class="text-dark">SUBSYSTEMS</code></h5>
+        </div>
+        <div class="col">
+            <hr>
+        </div>
+    </div>
+    <div class="px-4 py-4 row d-flex justify-content-center">
+        {% for subsystem in subsystems %}
+        <div class="py-4 col-lg-3 col-md-5" style="min-width: 400px;">
+            {% include 'smt/subsystem.html' %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover({ html: true });
+    });
+    $('.popover-dismiss').popover({
+        trigger: 'focus'
+    })
+
+    function sendAdd(ppk, spk) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "add_person_to_subsystem", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("person_pk=" + ppk + "&sys_pk=" + spk);
+        window.location.href = '/';
+    }
+
+    function sendDelete(pk, sub_slug) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "remove_assignment", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("assign_pk=" + pk);
+        window.location.replace(window.location.pathname + '#' + sub_slug);
+        window.location.reload(true)
+    }
+</script>

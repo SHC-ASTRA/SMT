@@ -1,0 +1,18 @@
+### Django ###
+*.log
+*.pot
+*.pyc
+*.zip
+__pycache__/
+migrations/
+local_settings.py
+# git update-index --assume-unchanged db.sqlite3
+db.sqlite3
+db.sqlite3-journal
+media
+
+### Venv ###
+env/
+
+### Dev ###
+.vscode/

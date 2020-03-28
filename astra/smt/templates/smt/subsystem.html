@@ -1,0 +1,83 @@
+{% load octicons %}
+
+<div class="shadow-lg card" id="{{ subsystem.slug }}">
+    <h5 class="d-flex justify-content-between mb-1 card-header">
+        {{ subsystem.name }}
+        <div>
+            <span class="d-inline-block align-top badge badge-secondary">{{ subsystem.slug }}</span>
+            <span class="d-inline-block align-top badge badge-warning">{{ subsystem.priority }}</span>
+            <span class="d-inline-block align-top badge badge-primary">{{ subsystem.point_value }}</span>
+        </div>
+    </h5>
+    <div class="card-body">
+        <p class="card-text">{{ subsystem.desc }}</p>
+        <p class="card-text">Acceptance criteria: <br>
+            {{ subsystem.ac }}
+        </p>
+        <ul class="mb-2 list-group">
+            {% for assignment in subsystem.assignment_set.all %}
+            <li class="d-flex justify-content-between list-group-item list-group-item-light">
+                <div>
+                    <span class="d-inline-block align-top badge badge-light">
+                        {% if assignment.person.team == 'SW' %}
+                        {% octicon 'file-binary' %}
+                        {% elif assignment.person.team == 'EC' %}
+                        {% octicon 'circuit-board' %}
+                        {% elif assignment.person.team == 'SC' %}
+                        {% octicon 'telescope' %}
+                        {% elif assignment.person.team == 'ME' %}
+                        {% octicon 'tools' %}
+                        {% else %}
+                        {% octicon 'gist-secret' %}
+                        {% endif %}
+                    </span>
+                    {{ assignment.person.name }}
+                </div>
+                <span class="d-inline-block align-top"
+                    onclick="sendDelete({{ assignment.pk }}, '{{ subsystem.slug }}');">
+                    {% octicon 'x' %}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- <a href="#" class="mb-2 btn btn-primary">Contact CE</a> -->
+    <ul class="p-0 m-0 nav nav-tabs justify-content-between card-header shadow-sm">
+        <span class="ml-2 align-middle">
+            <code style="color: black;">Created: {{ subsystem.date }}</code>
+            </br>
+            <code style="color: black;">Owner: {{ subsystem.owner }}</code>
+        </span>
+        <li class="mr-2 mt-2 nav-item nav-item-dark shadow-lg" style="min-width: 150px;">
+            <a class="nav-link active d-flex justify-content-between" data-toggle="modal" data-target="
+                {% if subsystem.subsystem_set.all %}
+                #{{ subsystem.slug }}-Contains
+                {% else %}
+                #
+                {% endif %}
+                ">Contains
+                <span>
+                    <span class="badge badge-dark">{{ subsystem.subsystem_set.all|length }}</span>
+                </span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="{{ subsystem.slug }}-Contains" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg shadow-lg" role="document">
+        <div class="modal-content" style="background-color: #BFDBF7;">
+            <div class="modal-body">
+                <div class="px-4 py-4 row d-flex justify-content-center">
+                    {% for subsystem in subsystem.subsystem_set.all %}
+                    <div class="py-4 col" style="min-width: 400px;">
+                        {% include 'smt/subsystem.html' %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
