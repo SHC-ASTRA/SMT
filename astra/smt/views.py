@@ -59,7 +59,7 @@ def build_me_team():
 
 def build_subsystems():
     context = {}
-    # Add al ltop-level subsystems
+    # Add all top-level subsystems
     context['subsystems'] = Subsystem.objects.filter(parent_system=None)
     return context
 
@@ -113,6 +113,34 @@ def remove_assignment(request):
     a = Assignment.objects.get(pk=request.POST['assign_pk'])
     a.delete()
     return HttpResponse('OK')
+
+
+def create_subsystem(request):
+    if request.method != 'POST':
+        messages.warning(
+            request, 'You attempted to GET a POST (create_subsystem)')
+    try:
+        # First form group
+        name = request.POST['name']
+        desc = request.POST['desc']
+        ac = request.POST['ac']
+        # Second form group
+        priority = request.POST['priority']
+        pv = request.POST['point_value']
+        # Third form group
+        if request.POST['parent_system'] is 'None':
+            parent = None
+        else:
+            parent = Subsystem.objects.get(pk=request.POST['parent_system'])
+        # Initialize subsystem with those values and save
+        s = Subsystem(name=name, desc=desc, ac=ac, priority=priority,
+                      point_value=pv, parent_system=parent)
+        s.save()
+        s.save()
+    except Exception as e:
+        messages.warning(request, 'Something went wrong (create_subsystem)!')
+        messages.warning(request, str(e))
+    return redirect('/')
 
 
 def failed_to_contact(request):
