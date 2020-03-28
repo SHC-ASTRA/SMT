@@ -1,14 +1,76 @@
-{% load static %}
+{% load octicons %}
 
 <nav class="justify-content-between shadow-lg navbar sticky-top navbar-expand navbar-dark"
     style="background-color: #022B3A;">
     <a class="navbar-brand" href="/">
-        <!-- <img src="{% static 'logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt=""> -->
         ASTRA SMT
     </a>
     <ul class="navbar-nav">
+        <li class="ml-2 nav-item">
+            <a class="btn btn-light" data-toggle="modal" data-target="#create-subsystem">Create</a>
+        </li>
         <li class="ml-2 nav-item">
             <a class="btn btn-outline-dark text-light" oncontextmenu="window.location.href = '/admin';">Admin</a>
         </li>
     </ul>
 </nav>
+
+<div class="modal fade" id="create-subsystem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="mb-1 card-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Subsystem</h5>
+            </div>
+            <form action="/create_subsystem" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input class="mb-1 form-control form-control-lg" type="text" name="name" maxlength="64"
+                            required="" id="name" placeholder="Name">
+                        <textarea class="mb-1 form-control form-control-sm" name="desc" cols="40" rows="2"
+                            maxlength="1024" id="desc" placeholder="Description" required></textarea>
+                        <textarea class="mb-1 form-control form-control-sm" name="ac" cols="40" rows="2"
+                            maxlength="2048" id="ac" placeholder="Acceptance Criteria" required></textarea>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class=" input-group-text" style="width: 150px;">Priority:</div>
+                            </div>
+                            <input class="form-control" type="number" name="priority" value="1" required=""
+                                id="priority">
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class=" input-group-text" style="width: 150px;">Point Value:</div>
+                            </div>
+                            <input class="form-control" type="number" name="point_value" value="0" step="0.5"
+                                required="" id="point_value">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" style="width: 150px;">Parent System:</div>
+                            </div>
+                            <select class="form-control" name="parent_system" id="parent_system">
+                                {% for subsystem in subsystems %}
+                                <option value="{{ subsystem.pk }}" selected="">{{ subsystem }}</option>
+                                {% empty %}
+                                <option value="" selected="">None</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="py-2 modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
