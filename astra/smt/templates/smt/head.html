@@ -83,16 +83,20 @@
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", "add_person_to_subsystem", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.onload = function () {
+            window.location.reload(true)
+        };
         xhttp.send("person_pk=" + ppk + "&sys_pk=" + spk);
-        window.location.reload(true)
     }
 
     function sendDelete(pk, sub_slug) {
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", "remove_assignment", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.onload = function () {
+            window.location.replace(window.location.pathname + '#' + sub_slug);
+            window.location.reload(true)
+        };
         xhttp.send("assign_pk=" + pk);
-        window.location.replace(window.location.pathname + '#' + sub_slug);
-        window.location.reload(true)
     }
 </script>
