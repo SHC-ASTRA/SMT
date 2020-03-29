@@ -17,6 +17,7 @@ This project does not include a database when cloned from the repo.
 You must initialize a new one with:
 
 ```bash
+    python3 manage.py makemigrations smt
     python3 manage.py migrate
 ```
 
