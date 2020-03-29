@@ -84,7 +84,7 @@
         xhttp.open("POST", "add_person_to_subsystem", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("person_pk=" + ppk + "&sys_pk=" + spk);
-        window.location.href = '/';
+        window.location.reload(true)
     }
 
     function sendDelete(pk, sub_slug) {
