@@ -62,7 +62,7 @@
                             <select class="form-control" name="parent_system" id="parent_system">
                                 <option value="" selected="">None</option>
                                 {% for subsystem in subsystems %}
-                                <option value="{{ subsystem.pk }}" selected="">{{ subsystem }}</option>
+                                <option value="{{ subsystem.pk }}">{{ subsystem }}</option>
                                 {% endfor %}
                             </select>
                         </div>
