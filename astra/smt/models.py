@@ -1,3 +1,5 @@
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 from django.db import models
 
 
@@ -37,6 +39,10 @@ class Subsystem(models.Model):
 
     class Meta:
         ordering = ['priority']
+
+    @property
+    def formatted_markdown(self):
+        return markdownify(self.ac)
 
     def __str__(self):
         return str(self.slug) + ' ' + str(self.name)[:10] + '...'

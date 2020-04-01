@@ -16,7 +16,7 @@
         </p>
         <p class="card-text">
             <h6>Acceptance criteria:</h6>
-            {{ subsystem.ac }}
+            {{ subsystem.formatted_markdown|safe }}
         </p>
         <ul class="mb-2 list-group">
             {% for assignment in subsystem.assignment_set.all %}
