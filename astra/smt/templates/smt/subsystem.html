@@ -1,4 +1,5 @@
 {% load octicons %}
+{% load smt_extras %}
 
 <div class="shadow-lg card" id="{{ subsystem.slug }}">
     <h5 class="d-flex justify-content-between mb-1 card-header">
@@ -46,7 +47,8 @@
         </ul>
         <button type="button" class="btn btn-primary" data-toggle="modal"
             data-target="#{{ subsystem.slug }}-Edit">Edit</button>
-        <button type="button" class="btn btn-outline-secondary">Archive</button>
+        <button type="button" class="btn btn-outline-secondary"
+            onclick="window.location.href = '/archive?pk={{ subsystem.pk }}'">Archive</button>
     </div>
     <!-- <a href="#" class="mb-2 btn btn-primary">Contact CE</a> -->
     <ul class="p-0 m-0 nav nav-tabs justify-content-between card-header shadow-sm">
@@ -57,14 +59,14 @@
         </span>
         <li class="mr-2 mt-2 nav-item nav-item-dark shadow-lg" style="min-width: 150px;">
             <a class="nav-link active d-flex justify-content-between" data-toggle="modal" data-target="
-                {% if subsystem.subsystem_set.all %}
+                {% if subsystem.subsystem_set.all|active %}
                 #{{ subsystem.slug }}-Contains
                 {% else %}
                 #
                 {% endif %}
                 ">Contains
                 <span>
-                    <span class="badge badge-dark">{{ subsystem.subsystem_set.all|length }}</span>
+                    <span class="badge badge-dark">{{ subsystem.subsystem_set.all|active|length }}</span>
                 </span>
             </a>
         </li>
@@ -78,7 +80,7 @@
         <div class="modal-content" style="background-color: #BFDBF7;">
             <div class="modal-body">
                 <div class="px-4 py-4 row d-flex justify-content-center">
-                    {% for subsystem in subsystem.subsystem_set.all %}
+                    {% for subsystem in subsystem.subsystem_set.all|active %}
                     <div class="py-4 col" style="min-width: 400px;">
                         {% include 'smt/subsystem.html' %}
                     </div>

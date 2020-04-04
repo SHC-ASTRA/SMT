@@ -60,13 +60,14 @@ def build_me_team():
 def build_subsystems():
     context = {}
     # Add all top-level subsystems
-    context['subsystems'] = Subsystem.objects.filter(parent_system=None)
+    context['subsystems'] = Subsystem.objects.filter(
+        parent_system=None, active=True)
     return context
 
 
 def index(request):
     context = {}
-    context['all_subsystems'] = Subsystem.objects.all()
+    context['all_subsystems'] = Subsystem.objects.filter(active=True)
     context.update(build_sw_team())
     context.update(build_ec_team())
     context.update(build_sc_team())
@@ -169,6 +170,26 @@ def edit_subsystem(request):
         s.priority = priority
         s.point_value = pv
         s.parent_system = parent
+        s.save()
+    except Exception as e:
+        messages.warning(request, 'Something went wrong (edit_subsystem)!')
+        messages.warning(request, str(e))
+    return redirect('/')
+
+
+def archive_subsystem(request):
+    # Should really be a post request but this is easier
+    if not request.user.is_authenticated:
+        messages.warning(
+            request, 'You do not have permission (archive_subsystem)')
+        return redirect('/')
+    if 'pk' not in request.GET:
+        messages.warning(
+            request, 'Something went wrong (archive_subsystem)!')
+        return redirect('/')
+    try:
+        s = Subsystem.objects.get(pk=request.GET['pk'])
+        s.active = False
         s.save()
     except Exception as e:
         messages.warning(request, 'Something went wrong (edit_subsystem)!')
