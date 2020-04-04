@@ -143,6 +143,39 @@ def create_subsystem(request):
     return redirect('/')
 
 
+def edit_subsystem(request):
+    if request.method != 'POST':
+        messages.warning(
+            request, 'You attempted to GET a POST (create_subsystem)')
+    try:
+        # First form group
+        pk = request.POST['pk']
+        name = request.POST['name']
+        desc = request.POST['desc']
+        ac = request.POST['ac']
+        # Second form group
+        priority = request.POST['priority']
+        pv = request.POST['point_value']
+        # Third form group
+        if request.POST['parent_system'] == '':
+            parent = None
+        else:
+            parent = Subsystem.objects.get(pk=request.POST['parent_system'])
+        # Initialize subsystem with those values and save
+        s = Subsystem.objects.get(pk=pk)
+        s.name = name
+        s.desc = desc
+        s.ac = ac
+        s.priority = priority
+        s.point_value = pv
+        s.parent_system = parent
+        s.save()
+    except Exception as e:
+        messages.warning(request, 'Something went wrong (edit_subsystem)!')
+        messages.warning(request, str(e))
+    return redirect('/')
+
+
 def failed_to_contact(request):
     if 'person' not in request.GET:
         messages.warning(
