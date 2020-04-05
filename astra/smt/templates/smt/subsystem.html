@@ -1,4 +1,5 @@
 {% load octicons %}
+{% load smt_extras %}
 
 <div class="shadow-lg card" id="{{ subsystem.slug }}">
     <h5 class="d-flex justify-content-between mb-1 card-header">
@@ -44,6 +45,10 @@
             </li>
             {% endfor %}
         </ul>
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-target="#{{ subsystem.slug }}-Edit">Edit</button>
+        <button type="button" class="btn btn-outline-secondary"
+            onclick="window.location.href = '/archive?pk={{ subsystem.pk }}'">Archive</button>
     </div>
     <!-- <a href="#" class="mb-2 btn btn-primary">Contact CE</a> -->
     <ul class="p-0 m-0 nav nav-tabs justify-content-between card-header shadow-sm">
@@ -54,14 +59,14 @@
         </span>
         <li class="mr-2 mt-2 nav-item nav-item-dark shadow-lg" style="min-width: 150px;">
             <a class="nav-link active d-flex justify-content-between" data-toggle="modal" data-target="
-                {% if subsystem.subsystem_set.all %}
+                {% if subsystem.subsystem_set.all|active %}
                 #{{ subsystem.slug }}-Contains
                 {% else %}
                 #
                 {% endif %}
                 ">Contains
                 <span>
-                    <span class="badge badge-dark">{{ subsystem.subsystem_set.all|length }}</span>
+                    <span class="badge badge-dark">{{ subsystem.subsystem_set.all|active|length }}</span>
                 </span>
             </a>
         </li>
@@ -75,13 +80,81 @@
         <div class="modal-content" style="background-color: #BFDBF7;">
             <div class="modal-body">
                 <div class="px-4 py-4 row d-flex justify-content-center">
-                    {% for subsystem in subsystem.subsystem_set.all %}
+                    {% for subsystem in subsystem.subsystem_set.all|active %}
                     <div class="py-4 col" style="min-width: 400px;">
                         {% include 'smt/subsystem.html' %}
                     </div>
                     {% endfor %}
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="{{ subsystem.slug }}-Edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="mb-1 card-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit {{ subsystem.slug }}</h5>
+            </div>
+            <form action="/edit_subsystem" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input class="d-none" type="text" name="pk" maxlength="64" required="" id="pk"
+                            value="{{ subsystem.pk }}">
+                        <input class="mb-1 form-control form-control-lg" type="text" name="name" maxlength="64"
+                            required="" id="name" value="{{ subsystem.name }}">
+                        <textarea class="mb-1 form-control form-control-sm" name="desc" cols="40" rows="2"
+                            maxlength="1024" id="desc" placeholder="{{ subsystem.desc }}"
+                            required>{{ subsystem.desc }}</textarea>
+                        <textarea class="mb-1 form-control form-control-sm" name="ac" cols="40" rows="2"
+                            maxlength="2048" id="ac" placeholder="{{ subsystem.ac }}"
+                            required>{{ subsystem.ac }}</textarea>
+                        <small class="form-text text-muted">This field accepts Markdown input. <a
+                                href="https://www.markdownguide.org/cheat-sheet/" target="_blank">Cheat
+                                Sheet.</a></small>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class=" input-group-text" style="width: 150px;">Priority:</div>
+                            </div>
+                            <input class="form-control" type="number" name="priority" value="{{ subsystem.priority }}"
+                                required="" id="priority">
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class=" input-group-text" style="width: 150px;">Point Value:</div>
+                            </div>
+                            <input class="form-control" type="number" name="point_value"
+                                value="{{ subsystem.point_value }}" step="0.5" required="" id="point_value">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" style="width: 150px;">Parent System:</div>
+                            </div>
+                            <select class="form-control" name="parent_system" id="parent_system">
+                                <option value="{{ subsystem.parent_system.pk }}" selected="">
+                                    {{ subsystem.parent_system }}</option>
+                                {% for subsystem in subsystems %}
+                                <option value="{{ subsystem.pk }}">{{ subsystem }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="py-2 modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

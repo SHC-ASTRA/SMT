@@ -30,6 +30,7 @@ class Subsystem(models.Model):
     ac = models.TextField(max_length=2048, default='No AC provided.')
     slug = models.SlugField(default='Placeholder')
     priority = models.IntegerField(default=1)
+    active = models.BooleanField(default=True)
     # If we have something over 99, we're doing it wrong
     point_value = models.DecimalField(
         default=0, max_digits=3, decimal_places=1)
@@ -45,7 +46,7 @@ class Subsystem(models.Model):
         return markdownify(self.ac)
 
     def __str__(self):
-        return str(self.slug) + ' ' + str(self.name)[:10] + '...'
+        return str(self.slug) + ' ' + str(self.name)[:20] + '...'
 
     def save(self, *args, **kwargs):
         self.slug = 'SYS-' + str(self.pk).zfill(3)
