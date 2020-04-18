@@ -1,4 +1,5 @@
 {% load octicons %}
+{% load smt_extras %}
 
 <div class="shadow-lg card">
     <h5 class="card-header d-flex justify-content-between">
@@ -30,44 +31,7 @@
         </h5>
         <ul class="mb-2 list-group">
             {% for person in sw_people %}
-            <li class="d-flex justify-content-between list-group-item 
-            {% if person.assignment_set.all %}
-            list-group-item-dark
-            {% else %}
-            list-group-item-light
-            {% endif %}">
-                {{ person.name }}
-                <span>
-                    {% if person.assignment_set.all %}
-                    <span tabindex="0" class="badge badge-dark" data-container="body" data-toggle="popover"
-                        data-trigger="focus" title="Current Tasks" data-placement="right" data-html="true" data-content="<ul class='list-group list-group-flush'>
-                            {% for assignment in person.assignment_set.all %}
-                                <li class='list-group-item'><a href='#{% if assignment.subsystem.parent_system %}{{ assignment.subsystem.parent_system.slug }}{% else %}{{ assignment.subsystem.slug }}{% endif %}'>{{ assignment.subsystem }}</a></li>
-                            {% endfor %}
-                        </ul>">
-                        {{ person.assignment_set.all|length }}
-                    </span>
-                    <span tabindex="0" data-container="body" data-toggle="popover" data-trigger="focus"
-                        title="All Subsystems" data-placement="right" data-html="true" data-content="<ul class='list-group list-group-flush'>
-                    {% for subsystem in all_subsystems %}
-                        <li class='list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ subsystem.pk }});'>{{ subsystem }}</a></li>
-                    {% endfor %}
-                    </ul>">
-                        {% octicon 'plus' %}
-                    </span>
-                </span>
-                {% else %}
-                <span tabindex="0" data-container="body" data-toggle="popover" data-trigger="focus"
-                    title="All Subsystems" data-placement="right" data-html="true" data-content="<ul class='list-group list-group-flush'>
-                    {% for subsystem in all_subsystems %}
-                        <li class='list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ subsystem.pk }});'>{{ subsystem }}</a></li>
-                    {% endfor %}
-                    </ul>">
-                    {% octicon 'plus' %}
-                </span>
-                {% endif %}
-                </span>
-            </li>
+            {% include 'smt/person_list.html' %}
             {% empty %}
             <li class="d-flex justify-content-between list-group-item list-group-item-light">
                 No People

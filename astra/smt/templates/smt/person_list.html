@@ -1,0 +1,51 @@
+{% load octicons %}
+{% load smt_extras %}
+
+<li class="d-flex justify-content-between list-group-item 
+{% if person.assignment_set.all %}
+list-group-item-dark
+{% else %}
+list-group-item-light
+{% endif %}">
+    {{ person.name }}
+    <span>
+        {% if person.assignment_set.all %}
+        <span tabindex="0" class="badge badge-dark" data-container="body" data-toggle="popover" data-trigger="focus"
+            title="Current Tasks" data-placement="bottom" data-html="true" data-content="<ul class='list-group list-group-flush'>
+                {% for assignment in person.assignment_set.all %}
+                    <li class='ml-0 pl-0 list-group-item'><a href='#{% if assignment.subsystem.parent_system %}{{ assignment.subsystem.parent_system.slug }}{% else %}{{ assignment.subsystem.slug }}{% endif %}'>{{ assignment.subsystem }}</a></li>
+                {% endfor %}
+            </ul>">
+            {{ person.assignment_set.all|length }}
+        </span>
+        <span tabindex="0" data-container="body" data-toggle="popover" data-trigger="focus" title="All Subsystems"
+            data-placement="bottom" data-html="true" data-content="
+            <ul class='list-group list-group-flush'>
+                {% for subsystem in subsystems %}
+                    <li class='ml-0 pl-0 list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ subsystem.pk }});'>{{ subsystem }}</a></li>
+                    {% for child_system in subsystem.subsystem_set.all|active %}
+                        <li class='list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ child_system.pk }});'>&raquo; {{ child_system }}</a></li>
+                    {% empty %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>">
+            {% octicon 'plus' %}
+        </span>
+    </span>
+    {% else %}
+    <span tabindex="0" data-container="body" data-toggle="popover" data-trigger="focus" title="All Subsystems"
+        data-placement="bottom" data-html="true" data-content="
+        <ul class='list-group list-group-flush'>
+            {% for subsystem in subsystems %}
+                <li class='ml-0 pl-0 list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ subsystem.pk }});'>{{ subsystem }}</a></li>
+                {% for child_system in subsystem.subsystem_set.all|active %}
+                    <li class='list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ child_system.pk }});'>&raquo; {{ child_system }}</a></li>
+                {% empty %}
+                {% endfor %}
+            {% endfor %}
+        </ul>">
+        {% octicon 'plus' %}
+    </span>
+    {% endif %}
+    </span>
+</li>
