@@ -42,7 +42,11 @@ class Subsystem(models.Model):
         ordering = ['priority']
 
     @property
-    def formatted_markdown(self):
+    def formatted_markdown_desc(self):
+        return markdownify(self.desc)
+
+    @property
+    def formatted_markdown_ac(self):
         return markdownify(self.ac)
 
     def __str__(self):
