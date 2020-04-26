@@ -13,11 +13,11 @@
     <div class="card-body">
         <p class="card-text">
             <h6>Description:</h6>
-            {{ subsystem.desc }}
+            {{ subsystem.formatted_markdown_desc|safe }}
         </p>
         <p class="card-text">
             <h6>Acceptance criteria:</h6>
-            {{ subsystem.formatted_markdown|safe }}
+            {{ subsystem.formatted_markdown_ac|safe }}
         </p>
         <ul class="mb-2 list-group">
             {% for assignment in subsystem.assignment_set.all %}
