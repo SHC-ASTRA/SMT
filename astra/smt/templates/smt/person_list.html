@@ -22,38 +22,42 @@ list-group-item-light
         </span>
         <span tabindex="0" data-container="body" data-toggle="popover" title="All Subsystems" data-placement="auto"
             data-html="true" data-content="
-        <div class='mb-1 pb-1 form-group'>
-            <input id='{{ person.pk }}-add-to-input' class='form-control form-control-sm' type='text' maxlength='64' 
-            onkeyup='filterSSList(&quot;{{ person.pk }}-add-to-input&quot;, &quot;{{ person.pk }}-add-to-ul&quot;);' placeholder='Filter'>
-        </div>
-        <ul id='{{ person.pk }}-add-to-ul' class='list-group list-group-flush'>
-            {% for subsystem in subsystems %}
-                <li class='ml-0 pl-0 list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ subsystem.pk }});'>{{ subsystem }}</a></li>
-                {% for child_system in subsystem.subsystem_set.all|active %}
-                    <li class='list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ child_system.pk }});'>&raquo; {{ child_system }}</a></li>
-                {% empty %}
+        <div style='overflow-y: scroll; max-height: 30vh;'>
+            <div class='mb-1 pb-1 form-group'>
+                <input id='{{ person.pk }}-add-to-input' class='form-control form-control-sm' type='text' maxlength='64' 
+                onkeyup='filterSSList(&quot;{{ person.pk }}-add-to-input&quot;, &quot;{{ person.pk }}-add-to-ul&quot;);' placeholder='Filter'>
+            </div>
+            <ul id='{{ person.pk }}-add-to-ul' class='list-group list-group-flush'>
+                {% for subsystem in subsystems %}
+                    <li class='ml-0 pl-0 list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ subsystem.pk }});'>{{ subsystem }}</a></li>
+                    {% for child_system in subsystem.subsystem_set.all|active %}
+                        <li class='list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ child_system.pk }});'>&raquo; {{ child_system }}</a></li>
+                    {% empty %}
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </ul>">
+            </ul>
+        </div>">
             {% octicon 'plus' %}
         </span>
     </span>
     {% else %}
     <span tabindex="0" data-container="body" data-toggle="popover" title="All Subsystems" data-placement="auto"
         data-html="true" data-content="
-        <div class='mb-1 pb-1 form-group'>
-            <input id='{{ person.pk }}-add-to-input' class='form-control form-control-sm' type='text' maxlength='64' 
-            onkeyup='filterSSList(&quot;{{ person.pk }}-add-to-input&quot;, &quot;{{ person.pk }}-add-to-ul&quot;);' placeholder='Filter'>
-        </div>
-        <ul id='{{ person.pk }}-add-to-ul' class='list-group list-group-flush'>
-            {% for subsystem in subsystems %}
-                <li class='ml-0 pl-0 list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ subsystem.pk }});'>{{ subsystem }}</a></li>
-                {% for child_system in subsystem.subsystem_set.all|active %}
-                    <li class='list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ child_system.pk }});'>&raquo; {{ child_system }}</a></li>
-                {% empty %}
+        <div style='overflow-y: scroll; max-height: 30vh;'>
+            <div class='mb-1 pb-1 form-group'>
+                <input id='{{ person.pk }}-add-to-input' class='form-control form-control-sm' type='text' maxlength='64' 
+                onkeyup='filterSSList(&quot;{{ person.pk }}-add-to-input&quot;, &quot;{{ person.pk }}-add-to-ul&quot;);' placeholder='Filter'>
+            </div>
+            <ul id='{{ person.pk }}-add-to-ul' class='list-group list-group-flush'>
+                {% for subsystem in subsystems %}
+                    <li class='ml-0 pl-0 list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ subsystem.pk }});'>{{ subsystem }}</a></li>
+                    {% for child_system in subsystem.subsystem_set.all|active %}
+                        <li class='list-group-item'><a href='#' onclick='sendAdd({{ person.pk }}, {{ child_system.pk }});'>&raquo; {{ child_system }}</a></li>
+                    {% empty %}
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </ul>">
+            </ul>
+        </div>">
         {% octicon 'plus' %}
     </span>
     {% endif %}
