@@ -1,0 +1,57 @@
+<script>
+    dataPPolar = {
+        datasets: [{
+            data: [
+                '{{ latest_person_data.sw_person_util }}',
+                '{{ latest_person_data.ec_person_util }}',
+                '{{ latest_person_data.sc_person_util }}',
+                '{{ latest_person_data.sc_person_util }}',
+            ]
+        }],
+
+        labels: [
+            'Software',
+            'Electrical',
+            'Science',
+            'Mechanical'
+        ]
+    };
+
+    var pPolar = document.getElementById('persons-polar');
+    var personsPolarChart = new Chart(pPolar, {
+        data: dataPPolar,
+        type: 'polarArea',
+        options: {
+            legend: {
+                display: false,
+            }
+        }
+    });
+
+    dataPLine = {
+        datasets: [{
+            data: [
+                {% for point in person_data_hist %}
+                    '{{ point.avg_person_util }}',
+        {% endfor %}
+            ]
+        }],
+
+    labels: [
+        {% for point in person_data_hist %}
+    '{{ point.date|date:"D M d" }}',
+        {% endfor %}
+    ]
+    };
+
+    var pLine = document.getElementById('persons-line');
+    var personsLineChart = new Chart(pLine, {
+        type: 'line',
+        data: dataPLine,
+        options: {
+            legend: {
+                display: false,
+            }
+        }
+    });
+</script>

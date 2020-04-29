@@ -4,14 +4,6 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
 
     <!-- Blank favicon -->
     <link
@@ -71,14 +63,44 @@
     </div>
 </div>
 
+<!-- More Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+
+<!-- Chart Lib -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+    integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+
 <script>
+    // Initialize popovers, Bootstrap required
     $(document).ready(function () {
         $('[data-toggle="popover"]').popover({ html: true });
     });
-    $('.popover-dismiss').popover({
-        trigger: 'focus'
+
+    // Better implementation of popovers
+    // I don't really know how this works but it combines focus and click triggers
+    jQuery(function ($) {
+        $("[data-toggle='popover']").popover({ trigger: "click" }).click(function (event) {
+            event.stopPropagation();
+
+        }).on('inserted.bs.popover', function () {
+            $(".popover").click(function (event) {
+                event.stopPropagation();
+            })
+        })
+
+        $(document).click(function () {
+            $("[data-toggle='popover']").popover('hide')
+        })
     })
 
+    // Functions for sending add-to and remove-from subsystem actions
     function sendAdd(ppk, spk) {
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", "add_person_to_subsystem", true);
@@ -99,4 +121,27 @@
         };
         xhttp.send("assign_pk=" + pk);
     }
+
+    // Subsystem search function
+    // Modified from W3
+    function filterSSList(inputID, ulID) {
+        console.log($('#' + inputID));
+        console.log($('#' + ulID));
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById(inputID);
+        filter = input.value.toUpperCase();
+        ul = document.getElementById(ulID);
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
 </script>
+
+{% include 'smt/person_data.html' %}
