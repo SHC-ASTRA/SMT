@@ -91,3 +91,77 @@ class Assignment(models.Model):
             super().save(*args, **kwargs)
         except Exception:
             pass
+
+
+class PersonData(models.Model):
+    team_util = models.DecimalField(
+        default=0, max_digits=4, decimal_places=1, null=True, blank=True)
+    avg_person_util = models.DecimalField(
+        default=0, max_digits=3, decimal_places=1, null=True, blank=True)
+    date = models.DateField(auto_now=True, unique=True)
+
+    # Per dicipline stats
+    sw_person_util = models.DecimalField(
+        default=0, max_digits=3, decimal_places=1, null=True, blank=True)
+    ec_person_util = models.DecimalField(
+        default=0, max_digits=3, decimal_places=1, null=True, blank=True)
+    sc_person_util = models.DecimalField(
+        default=0, max_digits=3, decimal_places=1, null=True, blank=True)
+    me_person_util = models.DecimalField(
+        default=0, max_digits=3, decimal_places=1, null=True, blank=True)
+
+    class Meta:
+        ordering = ['date']
+
+    def __str__(self):
+        return 'Team Util: ' + str(self.team_util) + ' Avg Util: ' + str(self.avg_person_util) + ' - ' + str(self.date)
+
+    def save(self, *args, **kwargs):
+        # Calc team_util
+        all_persons = list(Person.objects.filter(active=True))
+        for assign in Assignment.objects.all():
+            if assign.person in all_persons:
+                all_persons.pop(all_persons.index(assign.person))
+        active_team_size = len(Person.objects.filter(active=True))
+        team_util = (active_team_size - len(all_persons)
+                     ) / active_team_size * 100
+        self.team_util = team_util
+
+        # Calc dicipline stats
+        from .person_list_utils import build_sw_team
+        sw_person_util = 0
+        for person in build_sw_team()['sw_people']:
+            if person.assignment_set.all():
+                sw_person_util += len(person.assignment_set.all())
+
+        from .person_list_utils import build_ec_team
+        ec_person_util = 0
+        for person in build_ec_team()['ec_people']:
+            if person.assignment_set.all():
+                ec_person_util += len(person.assignment_set.all())
+
+        from .person_list_utils import build_sc_team
+        sc_person_util = 0
+        for person in build_sc_team()['sc_people']:
+            if person.assignment_set.all():
+                sc_person_util += len(person.assignment_set.all())
+
+        from .person_list_utils import build_me_team
+        me_person_util = 0
+        for person in build_me_team()['me_people']:
+            if person.assignment_set.all():
+                me_person_util += len(person.assignment_set.all())
+
+        self.sw_person_util = sw_person_util / \
+            len(build_sw_team()['sw_people'])
+        self.ec_person_util = ec_person_util / \
+            len(build_ec_team()['ec_people'])
+        self.sc_person_util = sc_person_util / \
+            len(build_sc_team()['sc_people'])
+        self.me_person_util = me_person_util / \
+            len(build_me_team()['me_people'])
+
+        # Calc all persons avg
+        self.avg_person_util = sum(
+            [sw_person_util, ec_person_util, sc_person_util, me_person_util]) / active_team_size
+        super().save(*args, **kwargs)
