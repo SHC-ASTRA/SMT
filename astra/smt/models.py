@@ -170,7 +170,7 @@ class PersonData(models.Model):
 class SubsystemData(models.Model):
     active_points = models.DecimalField(
         default=0, max_digits=4, decimal_places=1, null=True, blank=True)
-    date = models.DateField(unique=True)
+    date = models.DateField(auto_now=True, unique=True)
 
     class Meta:
         ordering = ['date']

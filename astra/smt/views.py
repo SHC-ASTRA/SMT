@@ -192,3 +192,14 @@ def gen_person_data(request):
     pd = PersonData()
     pd.save()
     return HttpResponse('OK')
+
+
+def gen_subsystem_data(request):
+    if 'localhost' not in request.get_host():
+        messages.warning(
+            request, 'Feature not supporting manual kick')
+        return redirect('/')
+    # Create new subsystem data point
+    sd = SubsystemData()
+    sd.save()
+    return HttpResponse('OK')
