@@ -1,0 +1,53 @@
+<script>
+    dataSDou = {
+        datasets: [{
+            data: [
+                '{{ sub_in_progess }}',
+                '{{ sub_frozen }}',
+            ]
+        }],
+
+        labels: [
+            'In Progress',
+            'Progress Frozen',
+        ],
+    };
+
+    var pPolar = document.getElementById('subsystems-polar');
+    var personsPolarChart = new Chart(pPolar, {
+        data: dataSDou,
+        type: 'doughnut',
+        options: {
+            legend: {
+                display: false,
+            }
+        }
+    });
+
+    dataSLine = {
+        datasets: [{
+            data: [
+                {% for point in subsystem_data_hist %}
+                    '{{ point.active_points }}',
+        {% endfor %}
+            ]
+        }],
+
+    labels: [
+        {% for point in subsystem_data_hist %}
+    '{{ point.date|date:"D M d" }}',
+        {% endfor %}
+    ],
+    };
+
+    var pLine = document.getElementById('subsystems-line');
+    var personsLineChart = new Chart(pLine, {
+        type: 'line',
+        data: dataSLine,
+        options: {
+            legend: {
+                display: false,
+            }
+        }
+    });
+</script>

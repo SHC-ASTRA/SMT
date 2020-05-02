@@ -16,9 +16,26 @@ def build_subsystems():
 
 def build_person_data():
     context = {}
-    context['latest_person_data'] = PersonData.objects.all()[0]
+    context['latest_person_data'] = list(PersonData.objects.all())[-1]
     context['person_data_hist'] = list(
         PersonData.objects.all())[-5:]
+    return context
+
+
+def build_subsystem_data():
+    context = {}
+    context['latest_subsystem_data'] = list(SubsystemData.objects.all())[-1]
+    # Calc velo, (delta active_points) / time (one in this case)
+    last_two = list(SubsystemData.objects.all())[-2:]
+    context['weekly_velo'] = last_two[1].active_points - \
+        last_two[0].active_points
+    context['subsystem_data_hist'] = list(
+        SubsystemData.objects.all())[-5:]
+    context['sub_in_progess'] = len(list(
+        filter(lambda s: s.assignment_set.all(),
+               Subsystem.objects.filter(active=True))))
+    context['sub_frozen'] = len(Subsystem.objects.filter(
+        active=True)) - context['sub_in_progess']
     return context
 
 
@@ -31,6 +48,7 @@ def index(request):
     context.update(build_me_team())
     context.update(build_subsystems())
     context.update(build_person_data())
+    context.update(build_subsystem_data())
     return render(request, 'smt/head.html', context=context)
 
 

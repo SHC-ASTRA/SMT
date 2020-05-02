@@ -13,10 +13,12 @@
             Subsystem Management & Tracking Site
         </h5>
         <div class="tab-content mb-2" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-personnel" role="tabpanel">
+            <div class="tab-pane fade show active" id="nav-about-us" role="tabpanel">About Us</div>
+            <div class="tab-pane fade" id="nav-personnel" role="tabpanel">
                 <div class="row pb-2 justify-content-center" style="max-height: 25vh; overflow-y: scroll;">
                     <div class="col d-flex flex-column justify-content-center">
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between" data-toggle="tooltip"
+                            title="Percentage of individuals (active) who are assigned to at least one subsystem">
                             <h6>Team Utilization</h6>
                             <h5 class="mx-auto"><span
                                     class="badge badge-secondary">{{ latest_person_data.team_util }}%</span></h5>
@@ -24,8 +26,9 @@
                         <div>
                             <hr>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <h6>
+                        <div class="d-flex justify-content-between" data-toggle="tooltip"
+                            title="Number of total subsystem assignments divided by the number of active members">
+                            <h6 class="pr-1">
                                 Avg. Tasks
                                 Per Person
                             </h6>
@@ -38,9 +41,10 @@
                             Avg. Tasks Per Person By Dicipline
                         </small>
                     </div>
-                    <div class="col d-flex flex-column justify-content-center" style="max-width: 200px;">
+                    <div class="col col-sm-6 d-flex flex-column justify-content-center" style="max-width: 200px;">
                         <canvas id="persons-line" width="50" height="50"></canvas>
-                        <small style="text-align:center">
+                        <small style="text-align:center" data-toggle="tooltip"
+                            title="New points generated every Wednesday">
                             Avg. Tasks
                             Workload (Per Person)
                             Over Time
@@ -48,17 +52,63 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="nav-subsystems" role="tabpanel">Subsystem Stats</div>
-            <div class="tab-pane fade" id="nav-about-us" role="tabpanel">About Us</div>
+            <div class="tab-pane fade" id="nav-subsystems" role="tabpanel">
+                <div class="row pb-2 justify-content-center" style="max-height: 25vh; overflow-y: scroll;">
+                    <div class="col d-flex flex-column justify-content-center">
+                        <div class="d-flex justify-content-between" data-toggle="tooltip"
+                            title="Total only includes subsystems that are 'in progress' (have one or more individuals assigned to them)">
+                            <h6>Points In Progress</h6>
+                            <h5 class="mx-auto"><span
+                                    class="badge badge-secondary">{{ latest_subsystem_data.active_points }}</span></h5>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                        <div class="d-flex justify-content-between" data-toggle="tooltip" data-html="true"
+                            title="Calculated as ΔP<sub>T</sub>/t - where P<sub>T</sub> is total points (active) and t, one week <br> Negative is good">
+                            <h6 class="pr-1">
+                                Week's
+                                Velocity
+                            </h6>
+                            <h5><span class="badge
+                                {% if weekly_velo < 0 %}
+                                badge-success
+                                {% elif weekly_velo > 0 %}
+                                badge-danger
+                                {% else %}
+                                badge-warning
+                                {% endif %}
+                                ">
+                                    {{ weekly_velo }}
+                                </span></h5>
+                        </div>
+                    </div>
+                    <div class="col mb-2 d-flex flex-column justify-content-center" style="max-width: 200px;">
+                        <canvas id="subsystems-polar" width="50" height="50"></canvas>
+                        <small style="text-align:center" data-toggle="tooltip"
+                            title="Frozen denotes a lack of active assignments">
+                            Subsystems In Progress
+                        </small>
+                    </div>
+                    <div class="col col-sm-6 d-flex flex-column justify-content-center" style="max-width: 200px;">
+                        <canvas id="subsystems-line" width="50" height="50"></canvas>
+                        <small style="text-align:center" data-toggle="tooltip"
+                            title="New points generated every Wednesday">
+                            Points In Progress
+                            Over Time
+                        </small>
+                    </div>
+                </div>
+            </div>
         </div>
         <nav>
             <div class="nav nav-tabs mb-2" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-personnel" role="tab"
+                <a class="nav-item nav-link active" id="nav-contact-tab" data-toggle="tab" href="#nav-about-us"
+                    role="tab" aria-controls="nav-contact" aria-selected="false">About Us</a>
+                <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-personnel" role="tab"
                     aria-controls="nav-home" aria-selected="true">Personnel</a>
                 <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-subsystems" role="tab"
                     aria-controls="nav-profile" aria-selected="false">Subsystems</a>
-                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-about-us" role="tab"
-                    aria-controls="nav-contact" aria-selected="false">About Us</a>
             </div>
         </nav>
         <a href="/failed_to_contact?person=Chief%20Engineer" class="btn btn-primary">Contact CE</a>

@@ -83,6 +83,11 @@
         $('[data-toggle="popover"]').popover({ html: true });
     });
 
+    // Initialize tooltips
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
     // Better implementation of popovers
     // I don't really know how this works but it combines focus and click triggers
     jQuery(function ($) {
@@ -145,3 +150,4 @@
 </script>
 
 {% include 'smt/person_data.html' %}
+{% include 'smt/subsystem_data.html' %}

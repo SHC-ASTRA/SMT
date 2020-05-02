@@ -165,3 +165,25 @@ class PersonData(models.Model):
         self.avg_person_util = sum(
             [sw_person_util, ec_person_util, sc_person_util, me_person_util]) / active_team_size
         super().save(*args, **kwargs)
+
+
+class SubsystemData(models.Model):
+    active_points = models.DecimalField(
+        default=0, max_digits=4, decimal_places=1, null=True, blank=True)
+    date = models.DateField(unique=True)
+
+    class Meta:
+        ordering = ['date']
+
+    def __str__(self):
+        return 'Active Points: ' + str(self.active_points) + ' - ' + str(self.date)
+
+    def save(self, *args, **kwargs):
+        # Calc active_points
+        active_points = 0
+        subsystems = Subsystem.objects.filter(parent_system=None, active=True)
+        for item in subsystems:
+            if item.assignment_set.all():
+                active_points += item.point_value
+        self.active_points = active_points
+        super().save(*args, **kwargs)
