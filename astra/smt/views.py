@@ -18,7 +18,7 @@ def build_person_data():
     context = {}
     context['latest_person_data'] = PersonData.objects.all()[0]
     context['person_data_hist'] = list(
-        PersonData.objects.all())[-10:]
+        PersonData.objects.all())[-5:]
     return context
 
 
@@ -163,3 +163,14 @@ def failed_to_contact(request):
         messages.warning(
             request, 'There is no contact information for ' + request.GET['person'] + '.')
     return redirect('/')
+
+
+def gen_person_data(request):
+    if 'localhost' not in request.get_host():
+        messages.warning(
+            request, 'Feature not supporting manual kick')
+        return redirect('/')
+    # Create new personnel data point
+    pd = PersonData()
+    pd.save()
+    return HttpResponse('OK')

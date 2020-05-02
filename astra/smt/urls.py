@@ -11,4 +11,5 @@ urlpatterns = [
     path('edit_subsystem', views.edit_subsystem),
     path('archive', views.archive_subsystem),
     path('failed_to_contact', views.failed_to_contact),
+    path('gen_person_data', views.gen_person_data),
 ]
